@@ -229,7 +229,6 @@
     function uploadPhoto(e){
         let [photo] = e.files
         let photo_container = document.getElementById('voter_photo')
-        
         photo_container.src = URL.createObjectURL(photo)
     }
 
@@ -288,6 +287,8 @@
             alertify.alert('Password did not match !').set('maximizable', false);  
         } 
         else{
+            let qrcode = document.querySelector('#qrcode canvas').toDataURL();
+            saveQR(qrcode)
             let file = document.querySelector('#photo_file_container')
             let data = new FormData();
             data.append("file", file.files[0])
@@ -312,6 +313,7 @@
                 .then(res => res.json())
                 .then(res => {
                     if (res == "Success"){
+                        send_mail();
                         add_form.style.display = "none"
                         clearTable();
                         clearInput();
@@ -319,6 +321,27 @@
                 })
             })
         }  
+    }
+
+    function send_mail(){
+        let email = document.querySelector('#v_email').value
+        fetch("../mail.php", {
+            method: 'POST',
+            headers : {
+                'Content-type': 'application/x-www-form-urlencoded'
+            },
+            body : `email=${email}`
+        })
+        // .then(())
+    }
+    function saveQR(src){
+        fetch("back-end/saveqrcode.php", {
+            method : 'POST',
+            headers : {
+                'Content-type' : 'application/x-www-form-urlencoded'
+            },
+            body : `src=${src}` 
+        })
     }
     function generateQR(){
         let studentID = document.querySelector('#v_stud_id').value;

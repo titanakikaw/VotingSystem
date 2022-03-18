@@ -52,16 +52,16 @@
     <body>
         <div class="navbar">
             <div class="nav-logo">
-                <h2>Voting System</h2>
+                <h2 style="color:white">Voting System</h2>
             </div>
             <div class="nav-info">
                 <div class="user-info">
-                    <h5>Current User : Sample User</h5>
+                    <!-- <h5>Current User : Sample User</h5> -->
                 </div>
                 <div class="nav-action">
                     <form id="logout_form" method="POST">
-                        <input type="button" name="action" value="Logout" onclick="logout()">
-                        <input type="text" hidden name="action" value="Logout">
+                        <input type="button" name="action" value="Logout" onclick="logout()" style="background-color: #FF4d4d;!important;">
+                        <input type="text" hidden name="action" value="Logout" >
                     </form>
                 </div>                
             </div>

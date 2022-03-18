@@ -10,6 +10,7 @@
 </head>
 <body>
     <div class="main-container" >
+        <!-- <button onclick="send_email()">send email</button> -->
         <div class="login-container">
             <div class="login-logo" style="width: 650px;">
                 <img src="images/login-xtra (2).png" alt="" srcset="" width="100%">
@@ -56,9 +57,9 @@
         </div>
     </div>
 
-    <input type="text"  id="OTP_contains">
-    <input type="text" name="user_id" id="user_id">
-    <input type="text" name="actionbtn" id="action_btn" value="create_session">
+    <input type="text"  id="OTP_contains" hidden>
+    <input type="text" name="user_id" id="user_id" hidden>
+    <input type="text" name="actionbtn" id="action_btn" value="create_session" hidden>
 </body>
 </html>
 <script>
@@ -177,6 +178,16 @@
                 console.log('failed')
             }
         })
+    }
+    function send_email(){
+        fetch("mail.php", {
+            method : 'POST',
+            headers : {
+                'Content-type' : 'application/x-www-form-urlencoded'
+            },
+            body : 'test'
+        })
+        alert("Credentials has been sent to student email!")
     }
 
     function Login(){

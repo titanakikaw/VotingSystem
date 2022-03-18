@@ -51,20 +51,19 @@
         $OTP = rand(10000,99999);
         $xdata['OTP'] = $OTP;
         $xdata['Success'] = true;
-        echo json_encode($xdata);
         // $xdata['OTP'] = $OTP;
-        // $number = '09550825237';
-        // $message = "Hi there ! Here's your OTP :$OTP";
-        // $apicode = "TR-SLSU_825237_HDHZZ";
-        // $passwd = "mnb]#ig$74";
-        // $status = itexmo($number,$message,$apicode,$passwd);
-        // // var_dump($status);
-        // if($status != "0"){
-        //     echo json_encode("Error code 97: OTP failed to send, please contact the administrator !");
-        // }
-        // else{
-           
-        // }
+        $number = '09550825237';
+        $message = "Hi there ! Here's your OTP :$OTP";
+        $apicode = "TR-SLSU_825237_HDHZZ";
+        $passwd = "mnb]#ig$74";
+        $status = itexmo($number,$message,$apicode,$passwd);
+        // var_dump($status);
+        if($status != "0"){
+            echo json_encode("Error code 97: OTP failed to send, please contact the administrator !");
+        }
+        else{
+            echo json_encode($xdata);
+        }
     }
 
     if($_POST['action'] == "validate_otp"){
