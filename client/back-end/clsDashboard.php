@@ -31,7 +31,7 @@
         $xdata_one = $xstmt_one->fetchAll();
         foreach ($xdata_one as $key => $value) {
             $position_id = $value['position_id'];
-            $new_element .= "|<div style='padding: 1rem; width:50%;box-shadow: 0px 0px 15px -13px #000000;'><canvas id='myChart_".$value['position']."'></canvas></div>";
+            $new_element .= "|<div style='margin : 0px 1rem ; width: 43%;padding: 1rem; box-shadow: 0px 0px 15px -13px #000000;'><canvas id='myChart_".$value['position']."'></canvas></div>";
             $names = '';
             $votes = '';
             $color = '';
@@ -78,11 +78,21 @@
                         }]
                     },
                     options: {
-                        
                         scales: {
-                          y: {
-                            beginAtZero: true
-                          }
+                            y: {
+                                beginAtZero: true,
+                                grid : { display : false},
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            },
+                            x: {
+                                beginAtZero: true,
+                                grid : { display : false},
+                                
+
+                            },
+                           
                         },
                         plugins : {
                             legend : {
@@ -108,6 +118,21 @@
         $xparams['election_id'] = $_POST['election_id'];
         $xdata = readyQueryGetItem($xparams, 'election', $conn);
         echo json_encode($xdata);
+    }
+    
+    if($_POST['action'] == 'daily_votes'){
+        $election_id = $_POST['election_id'];
+        $xparams['dates'] = [];
+        $xparams['votes'] = [];
+        $query = "SELECT count(date) as votes, `date` from ballot where election_id =? group by `date`  order by  `date` DESC ";
+        $stmt = $conn->prepare($query);
+        $stmt->execute([$election_id]);
+        $xdata = $stmt->fetchAll();
+        foreach ($xdata as $key => $value) {
+            array_push($xparams['dates'], $value['date']);
+            array_push($xparams['votes'], $value['votes']);
+        }
+        echo json_encode($xparams);
     }
 
 

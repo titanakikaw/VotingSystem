@@ -114,6 +114,11 @@ input[type=button] {
   background-color: #134772;
   color: white !important;
 }
+.navbar .nav-logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .navbar .nav-info {
   width: 300px;
   display: flex;

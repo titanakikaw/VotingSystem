@@ -52,7 +52,12 @@
     <body>
         <div class="navbar">
             <div class="nav-logo">
-                <h2 style="color:white">Voting System</h2>
+                <img src="../images/school-logo.png" alt="" srcset="" width="80px">
+                <div class="">
+                    <h2 style="margin-left: 5px;text-transform:uppercase; color:white; line-height:20px">Southern Leyte State</h2>
+                    <h1 style="margin: 2px 5px;text-transform:uppercase; color:white;line-height:18px">Univeristy</h1>
+                    <h3 style="margin: 2px 5px;text-transform:uppercase; color:#FF4d4d;line-height:20px;">Multi-Purpose Voting</h3>
+                </div>
             </div>
             <div class="nav-info">
                 <div class="user-info">
@@ -60,7 +65,7 @@
                 </div>
                 <div class="nav-action">
                     <form id="logout_form" method="POST">
-                        <input type="button" name="action" value="Logout" onclick="logout()" style="background-color: #FF4d4d;!important;">
+                        <input type="button" name="action" value="Logout" onclick="logout()" style="background-color: #FF4d4d!important;">
                         <input type="text" hidden name="action" value="Logout" >
                     </form>
                 </div>                

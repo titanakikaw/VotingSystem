@@ -48,7 +48,7 @@
                 <textarea style="width: 100%;height: 250px; max-height: 260px; max-width: 100%;min-width: 100%; padding: 10px ; font-size: 12px;" name="apply_cand[reason]"></textarea>
 
             </div>
-            <input type="button" value="Submit Application" hidden id="btn_submit_election" disabled style="margin-top: 1rem;" onclick="submitApplication()">
+            <input type="button" value="Submit Application"  id="btn_submit_election"  style="margin-top: 1rem;" onclick="submitApplication()">
         </div>
         <input type="text" name="apply_cand[stud_id]" id="stud_id" hidden value=<?php echo '"'.$_SESSION['user_id'].'"'?>>
         </form>
@@ -59,13 +59,13 @@
     let addContainer = document.querySelector('.bg-add-container');
 
 
-    function showModal(){
-        addContainer.style.display = "flex";
-    }
+    // function showModal(){
+    //     addContainer.style.display = "flex";
+    // }
 
-    function hideModal(){
-        addContainer.style.display = "none";
-    }
+    // function hideModal(){
+    //     addContainer.style.display = "none";
+    // }
     function validate_election(){
         let actionbtn = document.querySelector('#btn_submit_election')
         let election_id = document.querySelector('#election_id').value
@@ -87,6 +87,7 @@
 
     hideModal();
     function submitApplication(){
+        console.log('test')
         let form = document.querySelector('#add-form');
         let form_data = serializeForm(form)
         if(form != ''){

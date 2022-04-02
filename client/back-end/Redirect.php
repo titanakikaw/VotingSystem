@@ -10,6 +10,7 @@
         $xstmt->execute([$_POST['user_id']]);
         $xdata = $xstmt->fetch();
         $_SESSION['auth_level'] = $xdata['auth_level'];
+        $_SESSION['user_information'] = $xdata;
      
 
         header("Location: http://localhost/VotingSys/client/dashboard.php", TRUE, 301);
@@ -22,7 +23,7 @@
         $xstmt->execute([$_POST['admin']]);
         $xdata = $xstmt->fetch();
         $_SESSION['auth_level'] = $xdata['admin_level'];
-
+        $_SESSION['admin_information'] = $xdata;
 
         header("Location: http://localhost/VotingSys/client/dashboard.php", TRUE, 301);
         exit();

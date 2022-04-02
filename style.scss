@@ -105,6 +105,11 @@ input[type='button'] {
     padding: 10px 5px;
     background-color: #134772;
     color: white !important;
+    .nav-logo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
     .nav-info {
         width: 300px;
         display: flex;

@@ -37,7 +37,9 @@
             $xstmt->execute();
             $xdata = $xstmt->fetch();
             if($xdata){
+                $xdata_info['image_location'] = $xdata['image'];
                 $xdata_info['id'] = $xdata['student_id'];
+                $xdata_info['contact_no'] = $xdata['contact_no'];
                 $xdata_info['Success'] = true;
                 echo json_encode($xdata_info);
             }
@@ -48,22 +50,24 @@
     }
 
     if($_POST['action'] == "sendOTP"){
+        
         $OTP = rand(10000,99999);
         $xdata['OTP'] = $OTP;
         $xdata['Success'] = true;
-        // $xdata['OTP'] = $OTP;
-        $number = '09550825237';
-        $message = "Hi there ! Here's your OTP :$OTP";
-        $apicode = "TR-SLSU_825237_HDHZZ";
-        $passwd = "mnb]#ig$74";
-        $status = itexmo($number,$message,$apicode,$passwd);
-        // var_dump($status);
-        if($status != "0"){
-            echo json_encode("Error code 97: OTP failed to send, please contact the administrator !");
-        }
-        else{
-            echo json_encode($xdata);
-        }
+        // // $xdata['OTP'] = $OTP;
+        // $number = $_POST['contact_no'];
+        // $message = "Hi there ! Here's your OTP :$OTP";
+        // // $apicode = "TR-ONLIN776329_6EVZJ";
+        // // $passwd = 'iga$td]7an';
+        // $status = itexmo($number,$message,$apicode,$passwd);
+        // // var_dump($status);
+        // if($status != "0"){
+        //     echo json_encode("Error code 97: OTP failed to send, please contact the administrator !");
+        // }
+        // else{
+        //     echo json_encode($xdata);
+        // }
+        echo json_encode($xdata);
     }
 
     if($_POST['action'] == "validate_otp"){

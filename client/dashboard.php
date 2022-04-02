@@ -16,8 +16,6 @@
         <!-- <p style="font-size:12px">Showing data of : </p> -->
         <select style="font-size:12px;font-weight: normal;width: 235px;border: none;background-color:transparent!important;margin:0px;" id="election_id" onchange="getcount_cards()"> 
             <?php
-              
-
                 $query_election = "SELECT * from election";
                 $stmt_election = $conn->prepare($query_election);
                 $stmt_election->execute();
@@ -27,64 +25,68 @@
                     echo '<option value='.$value['election_id'].'>'.$value['title'].' '.$value['SY'].'</option>';
                    
                 }
-             
             ?>
         </select>
     </div>
-    <div class="db-card-collection" style=" margin-top:1rem; box-shadow: 0px 0px 15px -13px #000000;<?php echo $hidden ?>"  >
-        <div class="db-card" style="background-color: #FF4d4d;">
-            <div class="card-number">
-                <h1 id="no_voter_voted">15</h1>
-                <h5>Number of Voters Voted</h5>
+    <div class="" style=" margin-top:1rem; box-shadow: 0px 0px 15px -13px #000000;">
+        <!-- <h3 >Overview</h3> -->
+        <div class="db-card-collection" <?php echo $hidden ?>>
+            <div class="db-card" style="background-color: #FF4d4d;">
+                <div class="card-number">
+                    <h1 id="no_voter_voted">15</h1>
+                    <h5>Number of Voters Voted</h5>
+                </div>
+                <div class="card-image">
+                    <span class="material-icons md-max" style="color:#990000;">drive_file_rename_outline</span>
+                </div>
             </div>
-            <div class="card-image">
-                <span class="material-icons md-max" style="color:#990000;">drive_file_rename_outline</span>
+            <div class="db-card" style="background-color: #00b33c;">
+                <div class="card-number">
+                    <h1 id="no_candidate">15</h1>
+                    <!-- <br> -->
+                    <h5>Number of Candidates</h5>
+                </div>
+                <div class="card-image">
+                    <span class="material-icons md-max" style="color:#006611;">account_circle</span>
+                </div>
             </div>
-        </div>
-        <div class="db-card" style="background-color: #00b33c;">
-            <div class="card-number">
-                <h1 id="no_candidate">15</h1>
-                <!-- <br> -->
-                <h5>Number of Candidates</h5>
+            <div class="db-card" style="background-color: #FF9933;">
+                <div class="card-number">
+                    <h1 id="no_voter">15</h1>
+                    <!-- <br> -->
+                    <h5>Number of Participants</h5>
+                </div>
+                <div class="card-image">
+                    <span class="material-icons md-max" style="color:#990000;">people_outline</span>
+                </div>
             </div>
-            <div class="card-image">
-                <span class="material-icons md-max" style="color:#006611;">account_circle</span>
-            </div>
-        </div>
-        <div class="db-card" style="background-color: #FF9933;">
-            <div class="card-number">
-                <h1 id="no_voter">15</h1>
-                <!-- <br> -->
-                <h5>Number of Participants</h5>
-            </div>
-            <div class="card-image">
-                <span class="material-icons md-max" style="color:#990000;">people_outline</span>
-            </div>
-        </div>
-        <div class="db-card" style="background-color: #3377ff;">
-            <div class="card-number">
-                <h1 id="no_position">15</h1>
-                <!-- <br> -->
-                <h5>Number of<br>Positions</h5>
-            </div>
-            <div class="card-image">
-                <span class="material-icons md-max" style="color:#0044cc;">supervised_user_circle</span>
+            <div class="db-card" style="background-color: #3377ff;">
+                <div class="card-number">
+                    <h1 id="no_position">15</h1>
+                    <!-- <br> -->
+                    <h5>Number of<br>Positions</h5>
+                </div>
+                <div class="card-image">
+                    <span class="material-icons md-max" style="color:#0044cc;">supervised_user_circle</span>
+                </div>
             </div>
         </div>
     </div>
+  
     <br>
-    <div class="statistics-container" style=" background-color:white; padding: 1rem; box-shadow: 0px 0px 15px -13px #000000;">
-        <h3>Statistics and Poll Results</h3>
-        <div class="">
-            <div class="stats" style="display:flex;overflow:hidden; padding: 1rem;">
+    <div class="statistics-container" style="">
+        <div class="" style="display: flex; flex-direction:column ;">
+       
+            <div class="line_chart" style="padding: 1rem ; margin-bottom: 1rem; background-color:white; padding: 1rem; box-shadow: 0px 0px 15px -13px #000000;">
+                <h3>Monitoring of Daily Votes</h3>
+               
 
+               
             </div>
-            <div class="election_info" style="padding: 2rem;display:flex;">
-                <div class="info_date_card" style="padding: 1rem ;box-shadow: 0px 0px 15px -13px #000000;">
-                    <h1>SSC sample</h1>
-                    <p>School Year : 2020 - 2021</p>
-                    <p>Start Date : </p>
-                    <p>End Date : </p>
+            <div class="line_chart" style="padding: 1rem ; margin-bottom: 1rem; background-color:white; padding: 1rem; box-shadow: 0px 0px 15px -13px #000000;">
+                <h3>Candidate Poll</h3>
+                <div class="stats" style="display:flex;overflow:hidden;flex-wrap:wrap">
+
                 </div>
             </div>
         </div>
@@ -95,6 +97,57 @@
     let stat_container = document.querySelector('.stats')
     let election_info_container = document.querySelector('.election_info')
 
+   
+
+    async function getVoteByDay(){
+        let election_id = document.querySelector('#election_id');
+        let line_chart = document.querySelector('.line_chart');
+        if(line_chart.children[1]){
+            line_chart.children[1].remove()
+        }
+
+        let canvas = '<canvas id="myLineChart" style="width:100%; height: 250px;"></canvas>'
+        line_chart.append(htmlToElement(canvas))
+
+        await fetch('back-end/clsDashboard.php', {
+            method : 'POST',
+            headers : {
+                'Content-type' : 'application/x-www-form-urlencoded'
+            },
+            body : `election_id=${election_id.value}&action=daily_votes`
+        })
+        .then((res) =>res.json())
+        .then(res => {
+            console.log(res)
+            var xValues = res['dates'];
+            var yValues = res['votes'];
+            console.log(yValues)
+            new Chart("myLineChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                label : 'Votes per day',
+                fill: true,
+                lineTension: 0.1,
+                borderColor: 'rgb(75, 192, 192)',
+                data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                    y: {
+                        grid : { display : false},
+                        ticks: {
+                            stepSize: 1
+                        }
+                    },
+                }
+            }
+            });
+        })
+    }
 
     async function get_statistics(){
         let election_id = document.querySelector('#election_id').value;
@@ -171,6 +224,7 @@
     }
 
     getcount_cards();
+    getVoteByDay();
     // get_statistics();
 
 </script>
