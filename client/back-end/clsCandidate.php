@@ -5,10 +5,13 @@
 
     if($_POST['action'] == 'add_candidate'){
         $xparams['request_id'] = $_POST['req_id'];
-        $xparams['status'] = 1;
+        // $xparams['status'] = 1;
         $validation = check_candidate($xparams, $conn);
         if(!$validation){
             $xdata = readyQueryAdd($xparams,'candidate', $conn);
+            $params['table'] = 'candidate_request';
+            $params['cols']['status'] = 'Approved';
+            updateItem($params, $conn);
             echo json_encode($xdata);
         }
         else{
@@ -25,7 +28,6 @@
         $xparams['table_alias'] = "candidate";
         $xdata = readyQueryDisplayList_Custom($xparams, $conn);
         echo json_encode($xdata);
-        // $xparams['inner_join'] += " INNER JOIN election ON cdr.election_id = election.election_id";
     }
 
     if($_POST['action'] == 'get_data_inner_list'){
@@ -47,23 +49,77 @@
         echo json_encode($xdata);
     }
 
+    if($_POST['action'] == 'get_limit_request'){
+        $xparams['data_request'] = "*";
+        $xparams['table_alias'] = "candidate_request as cq";
+        $xparams['inner_join']  = "INNER JOIN voter ON cq.student_id = voter.student_id";
+        $xparams['filter'] = "";
+        $xparams['where'] = 'ORDER BY cq.student_id ASC LIMIT 5 ';
+        $xdata=readyQueryGetItem_Custom($xparams,$conn);
+        echo json_encode($xdata);
 
+    }
+
+    if($_POST['action'] == 'delete'){
+        $xdata  = explode(",",$_POST['items']);
+        $errors = [];
+        foreach ($xdata as $value) {
+            $xparams['studen_id'] = $value;
+            $status  = readyQueryDeleteItem( $xparams,"voter", $conn);
+            if($status != "Success"){
+                array_push($errors,"error : ".$status);
+            }
+        }
+        if(count($errors) <= 0 ){
+            echo json_encode("Success");
+        }
+    }
+
+    function updateItem($xparams, $conn){
+       
+        $table = $xparams['table'];
+        $values = '';
+        foreach ($xparams['cols'] as $key => $value) {
+            if($values != ''){
+                $values .= ',';
+            }
+            $values .= $key.'="'.$value.'"';
+
+        }
+
+        $query = "UPDATE $table SET $values";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+
+
+
+    }
     function readyQueryGetItem_Custom($xparams, $conn){
         $data_request = $xparams['data_request'];
-        $inner_join = $xparams['inner_join'];
+        $inner_join = "";
+        $filter = array();
+        if($xparams['inner_join'] != ''){
+            $inner_join = $xparams['inner_join'];
+        }
+       
+        if( $xparams['filter'] != ''){
+            array_push($filter, $xparams['filter']);
+        }
         $table = $xparams['table_alias'];
         $where = $xparams['where'];
-        $filter =   $xparams['filter'];
+       
         $query = "SELECT $data_request from $table  $inner_join $where";
         $stmt = $conn->prepare($query);
-        $stmt->execute([$filter]);
+        $stmt->execute($filter);
         $xdata = $stmt->fetch();
         return $xdata;
     }  
 
     function readyQueryDisplayList_Custom($xparams, $conn){
         $data_request = $xparams['data_request'];
-        $inner_join = $xparams['inner_join'];
+        if($xparams['inner_join'] != ''){
+            $inner_join = $xparams['inner_join'];
+        }
         $table = $xparams['table_alias'];
         $query = "SELECT $data_request from $table  $inner_join";
         $stmt = $conn->prepare($query);

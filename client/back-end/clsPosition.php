@@ -27,6 +27,8 @@
         }
         if(count($errors) <= 0 ){
             echo json_encode("Success");
+        }else{
+            echo json_encode(false);
         }
         
 

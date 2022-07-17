@@ -21,10 +21,10 @@
             <div class="login-logo" style="width: 650px;">
                 <img src="images/login-xtra (2).png" alt="" srcset="" width="100%">
             </div>
-            <div class="login-info" style="width: 280px; padding: 2rem; position: relative;">
+            <div class="login-info" style="width: 320px; padding: 2rem; position: relative;">
                 <div class="">
                     <div class="logon-credentials" style="display: flex; flex-direction:column; align-items:center;justify-content:center">
-                        <div class="" style="display:flex; align-items:center; margin-bottom:10px">
+                        <div class="" style="display:flex; align-items:center; margin-bottom:10px; width:250px">
                             <img src="images/school-logo.png" alt="" srcset="" width="80px">
                             <div class="">
                                 <h2 style="margin-left: 5px;text-transform:uppercase; line-height:20px">Southern Leyte State</h2>
@@ -47,19 +47,19 @@
                     </div>
                 </div>
 
-                <div class="qrcode-container" style="position:absolute; background-color:white; height: 250px ;padding: 1rem 2rem; width: 250px; bottom: 0px; display:flex; flex-direction:column; transform:translateX(100%); opacity: 0;">
+                <div class="qrcode-container" style="position:absolute; background-color:white; height: 250px ;padding: 1rem 2rem; width: 250px; bottom: 30px; display:flex; flex-direction:column; transform:translateX(100%); opacity: 0;">
                     <video id="preview"></video>
                     <input type="text" id="qrcode_result" hidden>
                     <input type="button" value="Cancel" style="border-radius: 2px;width: 100%;margin: 5px 0px;padding: 10px;" onclick="hideqrLogin()">
                 </div>
 
-                <div class="facial_recognition" style="position:absolute; background-color:white; height: 250px ;padding: 1rem 2rem; width: 250px; bottom: 0px; display:flex; flex-direction:column; transform:translateX(100%); opacity: 0;">
+                <div class="facial_recognition" style="position:absolute; background-color:white; height: 250px ;padding: 1rem 2rem; width: 320px; bottom: 30px;display:flex; flex-direction:column; transform:translateX(100%); opacity: 0;">
                     <video id="myFacial" width="250" height="187.5" autoplay muted></video>
                     <p style="font-size: 8px;">Please avoid moving while facial recognition is in progress</p>
                     <input type="button" value="Cancel" style="border-radius: 2px;width: 100%;margin: 5px 0px;padding: 10px;" onclick="hideFacialRecognition()">
                 </div>
 
-                <div class="OTP-container" style="position:absolute; background-color:white; height: 250px ;padding: 1rem 2rem; width: 250px; bottom: 0px; display:flex; flex-direction:column; transform:translateX(100%); opacity: 0;">
+                <div class="OTP-container" style="position:absolute; background-color:white; height: 250px ;padding: 1rem 2rem; width: 250px; bottom: 30px; display:flex; flex-direction:column; transform:translateX(100%); opacity: 0;">
                     <p>ENTER ONE TIME PASSWORD</p>
                     <input id="otp_password" type="text" name="txt_filter[qr]" style="width:100%; text-align:center; border-radius:3px; border: 1px solid black; padding: 10px">
                     <input type="button" onclick="validateOTP()" value="Submit" style="border-radius: 2px;width: 100%;margin: 5px 0px;padding: 10px; background-color: #4da6ff">
@@ -81,6 +81,7 @@
     let user_id = document.querySelector('#user_id');
     let facialRecognition = document.querySelector('.facial_recognition');
     const video = document.querySelector('#myFacial')
+    let intervalTime ;
     let image_location = '';
 
     let faceMatcher ;
@@ -146,7 +147,7 @@
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res)
+            // console.log(res)
             if(res['Success'] == true){
                 // console.log(res['admin'])
                 if(res['admin'] != undefined){
@@ -248,6 +249,7 @@
         );
         const labeledImages = await fetch_image();
         faceMatcher = new faceapi.FaceMatcher(labeledImages, 0.5)
+       
     }
     async function stopFacialRecognition(){
         let stream_video =  await video.srcObject;
@@ -257,6 +259,7 @@
         });
         let canvas = facialRecognition.querySelector('canvas');
         canvas.remove()
+        clearInterval(intervalTime)
     }
     
     function hideFacialRecognition(){
@@ -273,7 +276,7 @@
         }
         const displaySize = { width: video.width, height: video.height };
         faceapi.matchDimensions(canvas, displaySize);
-        setInterval(async () => {
+        intervalTime = setInterval(async () => {
             let detections = await faceapi
                 .detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
                 .withFaceLandmarks().withFaceDescriptors()
@@ -284,29 +287,38 @@
             canvas
                 .getContext('2d')
                 .clearRect(0, 0, canvas.width, canvas.height);
-
-            const results = resizedDetection.map(d => faceMatcher.findBestMatch(d.descriptor));
-            results.forEach((result , i) => {  
-                let new_result = result.toString().replace("(", '')
-                new_result = new_result.replace(')', '');
-                let data = new_result.split(" ")
-                const box = resizedDetection[0].detection.box;
-                const drawBox = new faceapi.draw.DrawBox(box, { label : 'verifying ...'});
-                faceapi.draw.drawFaceLandmarks(canvas, resizedDetection);
-                drawBox.draw(canvas)
-                if(data[0] != 'unknown'){
-                    if(data[1] <= '0.48'){
-                        let newForm = document.createElement("form");
-                        let actionbtn = document.getElementById('action_btn')
-                        newForm.setAttribute("method", "POST")
-                        newForm.setAttribute("action", "client/back-end/Redirect.php")
-                        newForm.append(actionbtn)
-                        newForm.append(user_id)
-                        document.body.append(newForm)
-                        newForm.submit()
+            if(resizedDetection){
+                // console.log(faceMatchfer) 
+                const results = resizedDetection.map(d => {
+                    if(d.descriptor){
+                        return faceMatcher.findBestMatch(d.descriptor)
                     }
-                }
-            });
+                   
+                    // console.log(d)
+                }) ;
+                results.forEach((result , i) => {  
+                    let new_result = result.toString().replace("(", '')
+                    new_result = new_result.replace(')', '');
+                    let data = new_result.split(" ")
+                    const box = resizedDetection[0].detection.box;
+                    const drawBox = new faceapi.draw.DrawBox(box, { label : 'verifying ...'});
+                    faceapi.draw.drawFaceLandmarks(canvas, resizedDetection);
+                    drawBox.draw(canvas)
+                    if(data[0] != 'unknown'){
+                        if(data[1] <= '0.48'){
+                            let newForm = document.createElement("form");
+                            let actionbtn = document.getElementById('action_btn')
+                            newForm.setAttribute("method", "POST")
+                            newForm.setAttribute("action", "client/back-end/Redirect.php")
+                            newForm.append(actionbtn)
+                            newForm.append(user_id)
+                            document.body.append(newForm)
+                            newForm.submit()
+                        }
+                    }
+                });
+            }
+            
 
         }, 100);
     })

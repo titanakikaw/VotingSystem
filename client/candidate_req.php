@@ -2,10 +2,10 @@
     require 'main.php'
 ?>
 <div>
-    <h1>Candidate Applicants</h1>
+    <!-- <h1>Candidate Applicants</h1> -->
     <div class="list-container">
-        <div class="filter">
-            <div class="list-filter" style="width: 600px;">
+        <div class="filter" style="background-color:white">
+            <div class="list-filter" style="width: 600px; ">
                 <h4 style="text-transform: uppercase;">Filter vote status in :</h4>
                 <div style="width: 600px;">
                     <select style="font-size:12px;font-weight: normal;width: 385px;" id="election_id" onchange="clearTable()">
@@ -22,14 +22,14 @@
                     </select>
                 </div>
             </div>
-            <div class="list-filter" style="width: 600px;">
+            <!-- <div class="list-filter" style="width: 600px;">
                 <h4 style="text-transform: uppercase;">Filter by name :</h4>
                 <div style="display: flex; align-items:center; justify-content:space-between; "> 
                     <input type="text" placeholder="First Name" style="font-size:12px;font-weight: normal;">
                     <input type="text" placeholder="Middle Name">
                     <input type="text" placeholder="Last Name">
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="list-action">
             <input type="button" value="Review Applicantion" onclick="showModal(),getSingleItem()">
@@ -101,7 +101,7 @@
         <hr>
         <hr>    
         <div class="add-actions" style="margin-top: 10px;">
-            <input type="button" value="Approve Application" onclick="approveCandidate()">
+            <input type="button" id="approveBtn" value="Approve Application" onclick="approveCandidate()">
             <input type="button" value="Close" onclick="hideModal()">
         </div>
     </div>
@@ -136,7 +136,7 @@
             res.forEach(item => {
                 let newItem = "";
                 let status_color = "blue";
-                newItem += ` <li style="display: flex; justify-content:space-between; padding: 10px; margin : 5px 0px; cursor:pointer; background-color:#f3f3f3; border-left: 4px solid blue;border-radius: 3px" onclick="itemFocus(this)">`;
+                newItem += ` <li style="display: flex; justify-content:space-between; padding: 10px; margin : 5px 0px; cursor:pointer; background-color:#f3f3f3; border-radius: 3px" onclick="itemFocus(this)">`;
                 newItem += ` <input type="checkbox" hidden>`
                 newItem += ` <h5 hidden>${item['request_id']}</h5>`
                 newItem += ` <h5 style="width: 200px;">${item['lname']},${item['fname']}</h5>`
@@ -144,7 +144,7 @@
                 newItem += ` <h5 style="width: 100px;">${item['year']}</h5>`
                 newItem += ` <h5 style="width: 180px;">${item['position']}</h5>`
                 newItem += ` <h5 style="width: 150px;">${item['title']} ${item['SY']}</h5>`
-                newItem += ` <h5 style="width: 100px;">${item['status'] ?'SERVED' : 'UNSERVED' } </h5>`
+                newItem += ` <h5 style="width: 100px;">${item['status']} </h5>`
                 newItem += `</li>`;
                 data_list_table.append(htmlToElement(newItem));
             });
@@ -202,6 +202,11 @@
                 course.value = res['course']
                 year.value = res['year']
                 reason.value = res['reason']
+
+                if(res['status'] == 'Approved'){
+                    document.querySelector('#approveBtn').style.display = "none"
+                }
+
             })
         }
     }

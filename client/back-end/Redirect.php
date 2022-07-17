@@ -13,7 +13,7 @@
         $_SESSION['user_information'] = $xdata;
      
 
-        header("Location: http://localhost/VotingSys/client/dashboard.php", TRUE, 301);
+        header("Location: ../dashboard.php", TRUE, 301);
         exit();
     }
     if(isset($_POST['actionbtn']) == "admin_login" && isset($_POST['admin']) != ""){
@@ -25,7 +25,7 @@
         $_SESSION['auth_level'] = $xdata['admin_level'];
         $_SESSION['admin_information'] = $xdata;
 
-        header("Location: http://localhost/VotingSys/client/dashboard.php", TRUE, 301);
+        header("Location: ../dashboard.php", TRUE, 301);
         exit();
     }
 

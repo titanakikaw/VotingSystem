@@ -22,12 +22,14 @@
         foreach ($xdata as $value) {
             $xparams['student_id'] = $value;
             $status  = readyQueryDeleteItem( $xparams,"voter", $conn);
-            if($status != "Success"){
+            if(!$status){
                 array_push($errors,"error : ".$status);
             }
         }
         if(count($errors) <= 0 ){
             echo json_encode("Success");
+        }else{
+            echo json_encode("Failed");
         }
         
 
@@ -156,8 +158,8 @@
             $xstmt->execute([$xparams['student_id']]);
             return "Success";
         }catch (PDOException $e){
-            echo  $e->getMessage();
-            return "Error";
+            // echo  $e->getMessage();
+            return false;
         }
     }
     function readyQueryGetItem($xparams, $table,$conn){

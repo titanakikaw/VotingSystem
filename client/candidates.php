@@ -2,7 +2,7 @@
     require 'main.php'
 ?>
 <div>
-    <h1>Candidates</h1>
+    <!-- <h1>Candidates</h1> -->
     <div class="list-container">
     <div class="filter">
             <div class="list-filter" style="width: 600px;">
@@ -22,14 +22,14 @@
                     </select>
                 </div>
             </div>
-            <div class="list-filter" style="width: 600px;">
+            <!-- <div class="list-filter" style="width: 600px;">
                 <h4 style="text-transform: uppercase;">Filter by name :</h4>
                 <div style="display: flex; align-items:center; justify-content:space-between; "> 
                     <input type="text" placeholder="First Name" style="font-size:12px;font-weight: normal;">
                     <input type="text" placeholder="Middle Name">
                     <input type="text" placeholder="Last Name">
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="list-action">
             <!-- <input type="button" value="Add Candidate" onclick="showModal()"> -->

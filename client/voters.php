@@ -2,7 +2,7 @@
     require 'main.php'
 ?>
 <div class="voters">
-    <h1>Voters</h1>
+    <!-- <h1>Voters</h1> -->
     <div class="list-container">
         <div class="filter">
             <div class="list-filter" style="width: 600px;">
@@ -177,7 +177,7 @@
                 <div class="" style="display: flex; align-items:center;height:90%;  justify-content:center; margin: 5px 5px; flex-direction:column;">
                     <div class="add-input" style="text-align: center;">
                         <div id="qrcode"></div>
-                        <input type="button" value="Download QR CODE" style="margin: 10px 0px;">
+                        <input type="button" value="Download QR CODE" style="margin: 10px 0px;" onclick="downloadQR()">
                     </div>
                    
                 </div>
@@ -343,20 +343,21 @@
             body : `src=${src}` 
         })
     }
-    function generateQR(){
+    async function generateQR(){
         let studentID = document.querySelector('#v_stud_id').value;
         let password = document.querySelector('#v_password').value;
         if(studentID == '' || studentID == null){
             studentID = "test";
         }
         let newQR = studentID+'SLSUVOTER'+password
-        var qrcode = new QRCode(QR, {
+        var qrcode = await new QRCode(QR, {
             text: newQR,
             width: 160,
             height: 160,
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
         });
+        qrcode.makeUrl()
     }
 
     function removeQr(){
@@ -573,6 +574,47 @@
         document.getElementById('v_year').value = ""
         document.getElementById('v_password').value = ""
         document.getElementById('v_confirm_pasword').value = ""
+    }
+
+    function downloadQR(){
+        let a = document.createElement('a');
+        a.href = QR.getElementsByTagName('img')[0].src ;
+        a.setAttribute("download", "test")
+        QR.append(a)
+        a.click()
+    }
+
+    function deleteItems(){
+        let data_items = [...data_list_table.querySelectorAll("input[type='checkbox']")];
+        let selected_items = '';
+        data_items.forEach((item) => {
+            if(item.checked){
+                if(item != ''){
+                    selected_items += `${item.parentElement.children[1].innerHTML},`
+                }
+            }
+        })
+        selected_items = selected_items.slice(0, -1)
+        if(selected_items != ''){
+            // console.log(selected_items)
+            fetch('back-end/clsVoter.php', {
+                method : 'POST',
+                headers : {
+                'Content-type' : 'application/x-www-form-urlencoded' ,
+                },
+                body: 'items='+ selected_items + '&action=delete_item'
+            })
+            .then((response) => response.json())
+            .then(response => {
+                if(response == "Success"){
+                    clearTable();
+                }  else{
+                    alertify.alert("Voter already in use, Unable to delete!")
+                }
+            })
+     
+        }
+        
     }
 
     clearTable();

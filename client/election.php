@@ -2,7 +2,7 @@
     require 'main.php'
 ?>
 <div>
-    <h1>Elections</h1>
+    <!-- <h1>Elections</h1> -->
     <div class="list-container">
         <!-- <div class="list-filter">
             <input type="text" placeholder="Search Name" style="width: 450px;border-radius: 10px; border: 2px solid black">
@@ -14,8 +14,8 @@
             <input type="button" value="Search">
         </div> -->
         <div class="list-action">
-            <input type="button" value="New Candidate" onclick="showModal()">
-            <input type="button" value="Delete Candidate" onclick="deleteItems()">
+            <input type="button" value="New Election" onclick="showModal()">
+            <input type="button" value="Delete Election" onclick="deleteItems()">
             <input type="button" value="View Detail">
         </div>
         <div class="list-table">
@@ -27,7 +27,7 @@
                     <h5 style="width: 150px">School Year</h5>
                     <h5 style="width: 150px">Voting Starts</h5>
                     <h5 style="width: 150px">Voting End</h5>
-                    <h5 style="width: 150px">Created By</h5>
+                    <!-- <h5 style="width: 150px">Created By</h5> -->
                 </li>
                 <hr>
             </ul>
@@ -158,7 +158,7 @@
                 newItem += ` <h5 style="width:150px">${item['SY']}</h5>`
                 newItem += ` <h5 style="width:150px">${item['start_date']}</h5>`
                 newItem += ` <h5 style="width:150px">${item['end_date']}</h5>`
-                newItem += ` <h5 style="width:150px">${item['year']}</h5>`
+                // newItem += ` <h5 style="width:150px">${item['year']}</h5>`
                 newItem += `</li>`;
                 data_list_table.append(htmlToElement(newItem));
             });
@@ -194,6 +194,8 @@
             .then(response => {
                 if(response == "Success"){
                     clearTable();
+                }else{
+                    alertify.alert("Unable to delete, Data already in use!")
                 }
             })
      

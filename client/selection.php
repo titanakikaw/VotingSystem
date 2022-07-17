@@ -3,7 +3,7 @@
     if(isset($_POST['selected'])){
         $_SESSION['election_id'] = $_POST['selected'];
         // header('Location: /voting_process.php', true, 301);
-        echo '<script>window.top.location="http://localhost/VotingSys/client/voting_process.php"</script>';
+        echo '<script>window.top.location="voting_process.php"</script>';
     }
 ?>
 <style>

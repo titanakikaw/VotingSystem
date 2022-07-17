@@ -2,7 +2,7 @@
     require 'main.php'
 ?>
 <div>
-    <h1>List of Positions</h1>
+    <!-- <h1>List of Positions</h1> -->
     <div class="list-container">
         <!-- <div class="list-filter">
             <input type="text" placeholder="Search Name" style="width: 450px;border-radius: 10px; border: 2px solid black">
@@ -154,6 +154,8 @@
             .then(response => {
                 if(response == "Success"){
                     clearTable();
+                }else{
+                    alertify.alert("Unable to delete, Data already in Use!")
                 }
             })
      

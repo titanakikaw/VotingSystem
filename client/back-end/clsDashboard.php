@@ -19,8 +19,6 @@
         echo json_encode($xparams);
 
     }
-
-
     if($_POST['action'] == 'get_statistics'){
         $election_id = $_POST['election_id'];
         $new_element = '';
@@ -31,7 +29,12 @@
         $xdata_one = $xstmt_one->fetchAll();
         foreach ($xdata_one as $key => $value) {
             $position_id = $value['position_id'];
-            $new_element .= "|<div style='margin : 0px 1rem ; width: 43%;padding: 1rem; box-shadow: 0px 0px 15px -13px #000000;'><canvas id='myChart_".$value['position']."'></canvas></div>";
+            // var_dump($position_id);
+            if($new_element != ''){
+                $new_element .= '|';
+            }
+            $new_element .= '<div class="leader-card" style="display:flex;justify-content:space-between ; width: 400px; padding:1rem; box-shadow: 0px 0px 15px -13px #000000; background-color:white; border-radius: 3px;margin: 10px;">';
+            // var_dump( $new_element);
             $names = '';
             $votes = '';
             $color = '';
@@ -42,7 +45,11 @@
             $xdata_two = $xstmt_two->fetchAll();
             foreach ($xdata_two as $key => $value_two) {
                 $candidate_id = $value_two['candidate_id'];
-                $fullname = '`'.$value_two['lname'].' '.$value_two['fname'].'`';
+                $fullname = $value_two['lname'].' '.$value_two['fname'];
+                $image = $value_two['image'];
+                // var_dump($image);
+                $new_element .=  '<div class="leader-card-media" style="border-radius:50%;overflow:hidden; width: 150px; height: 150px"><img src="'.$image.'" alt="voter-image" width="100%" ></div><div class="leader-card-info" style="margin-left:15px; display:flex; flex-direction:column; align-items:center; justify-content:center"><h5 style="border-bottom: 2px solid grey;">'.$value['position'].'</h5><p style="font-size: 12px; font-weight:bold; text-transform:uppercase">'. $fullname .'</p><p style="text-align:center;font-size: 12px;">VOTES</p>';
+
                 $query_three = "SELECT count(*) from voter_vote INNER JOIN ballot on voter_vote.ballot_id = ballot.ballot_id where candidate_id =? and election_id =?";
                 $xstmt_three = $conn->prepare($query_three);
                 $xstmt_three->execute([ $candidate_id, $election_id ]);
@@ -58,60 +65,18 @@
                 }
                 $names .= "'".$fullname."'";
                 $votes .= $xdata_three[0];
+                $new_element .= '<h1 style="text-align:center">'.$votes.'</h1></div>';
 
                 $new_color = rand_color();
                 $color .= "'".$new_color."'";
             }
-            // data: [".$votes."],
-            $new_script .= "
-                const ctx".$value['position']." = document.getElementById('myChart_".$value['position']."').getContext('2d');
-                const myChart".$value['position']." = new Chart(ctx".$value['position'].", {
-                    type: 'bar',
-                    data: {
-                        labels: [".$names."],
-                        datasets: [{
-                            label: [".$names."],
-                            data: [".$votes."],
-                            backgroundColor : [".$color."],
-                            borderColor: [".$color."],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid : { display : false},
-                                ticks: {
-                                    stepSize: 1
-                                }
-                            },
-                            x: {
-                                beginAtZero: true,
-                                grid : { display : false},
-                                
-
-                            },
-                           
-                        },
-                        plugins : {
-                            legend : {
-                                display: false
-                            },
-                            title: {
-                                display: true,
-                                text: '".$value['position']."'
-                            }
-                        }
-                      },
-                });
-            ";
-            
+            $new_element .= "</div>";    
         }
-        
-        $response_data = [$new_element, $new_script];
-        // var_dump( $response_data );
-        echo json_encode($response_data);
+        // var_dump( $new_element);
+        // $response_data = [$new_element, $new_script];
+        // var_dump( $new_element );
+        // die();
+        echo json_encode($new_element);
     }
 
     if($_POST['action'] == 'get_election_info'){
@@ -135,6 +100,26 @@
         echo json_encode($xparams);
     }
 
+    if($_POST['action'] == 'latest_applicants'){
+        
+        $election_id = $_POST['election_id'];
+        $query = "SELECT * from candidate_request as cr INNER JOIN voter on cr.student_id = voter.student_id INNER JOIN position on cr.position_id = position.position_id WHERE cr.election_id = $election_id  ORDER BY date LIMIT 4";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        $data = $stmt->fetchAll();
+        echo json_encode( $data);
+    }
+    if($_POST['action'] == 'load_leaders'){
+        $id = $_POST['election_id'];
+        $query = "SELECT * from ballot where election_id = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->execute([$id]);
+        $ballotId = $stmt->fetch();
+
+        $queryVotes = "SELECT * from voter_vote as vote INNER JOIN candidate on vote.candidate_id = candidate.candidate_id INNER JOIN  candidate_request on candidate.request_id = candidate.request_id INNER JOIN where vote.ballot_id =? ORDER BY ";
+
+    
+    }
 
     function rand_color() {
         return sprintf('#%06X', mt_rand(0, 0xFFFFFF));

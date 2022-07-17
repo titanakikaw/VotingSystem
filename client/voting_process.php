@@ -1,4 +1,6 @@
 <?php
+// var_dump('test');
+// die();
     require 'main.php';
     require 'back-end/clsConnection.php';
     $display_2 = 'display:none';
@@ -9,7 +11,7 @@
         $display = 'display:none';
         $display_2 = 'display:block';
     }else{
-        echo '<script>window.top.location="http://localhost/VotingSys/client/selection.php"</script>';
+        echo '<script>window.top.location="selection.php"</script>';
     }
 ?>
 <h1>Voting Process</h1>

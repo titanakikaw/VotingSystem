@@ -43,8 +43,8 @@ function readyQueryDeleteItem($xparams, $table,$conn){
         
         return "Success";
     }catch (PDOException $e){
-        echo  $e->getMessage();
-        return "Error";
+        // echo  $e->getMessage();
+        return false;
     }
 }
 function readyQueryGetItem($xparams, $table,$conn){

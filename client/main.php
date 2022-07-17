@@ -4,7 +4,7 @@
     session_start();
     if(isset($_SESSION['admin_id']) == ''){
         if(isset($_SESSION['user_id']) == ''){
-            header("Location: http://localhost/VotingSys/", TRUE, 301);
+            header("Location: ../", TRUE, 301);
             exit();
         }
     }
@@ -12,7 +12,7 @@
 
     if(isset($_POST['action']) == 'Logout'){
         session_destroy();
-        header("Location: http://localhost/VotingSys/", TRUE, 301);
+        header("Location: ../", TRUE, 301);
         exit();
     }
 ?>
@@ -23,7 +23,7 @@
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-        <script src="../script.js?v=<?php echo time(); ?>"></script>
+        <script defer src="../script.js?v=<?php echo time(); ?>"></script>
         <!-- JavaScript -->
         <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
@@ -50,7 +50,7 @@
         <title>Voting System</title>
     </head>
     <body>
-        <div class="navbar">
+        <!-- <div class="navbar">
             <div class="nav-logo">
                 <img src="../images/school-logo.png" alt="" srcset="" width="80px">
                 <div class="">
@@ -61,7 +61,6 @@
             </div>
             <div class="nav-info">
                 <div class="user-info">
-                    <!-- <h5>Current User : Sample User</h5> -->
                 </div>
                 <div class="nav-action">
                     <form id="logout_form" method="POST">
@@ -70,8 +69,8 @@
                     </form>
                 </div>                
             </div>
-        </div>
-        <div class="content" style="background-color: white;">
+        </div> -->
+        <div class="content" style="">
             <?php 
                 require "../components/sidebar.php"
             ?>

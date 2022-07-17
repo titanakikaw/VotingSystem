@@ -51,7 +51,9 @@ function serializeForm(form) {
 function htmlToElement(html) {
     var template = document.createElement('template');
     html = html.trim(); // Never return a text node of whitespace as the result
+    html.replace(/\s/g, "")
     template.innerHTML = html;
+    // console.log(template.innerHTML)
     return template.content.firstChild;
 }
 function itemFocus(selectedItem) {
@@ -59,15 +61,17 @@ function itemFocus(selectedItem) {
     if (checkbox.checked != true) {
         checkbox.checked = true;
         selectedItem.style.transform = 'scale(1.01)';
-        selectedItem.style.borderBottom = '1px solid grey';
-        selectedItem.style.borderTop = '1px solid grey';
-        selectedItem.style.borderRight = '1px solid grey';
+        // selectedItem.style.borderBottom = '1px solid grey';
+        // selectedItem.style.borderTop = '1px solid grey';
+        // selectedItem.style.borderRight = '1px solid grey';
+        selectedItem.style.backgroundColor = 'white';
         selectedItem.style.transition = '.2s ease-in-out';
     } else {
         selectedItem.style.transform = 'scale(1)';
         selectedItem.style.borderBottom = 'none';
         selectedItem.style.borderTop = 'none';
         selectedItem.style.borderRight = 'none';
+        selectedItem.style.backgroundColor = '#f3f3f3';
         checkbox.checked = false;
     }
 }
